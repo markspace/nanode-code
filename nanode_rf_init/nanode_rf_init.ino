@@ -109,14 +109,14 @@ void displayIPAddress( uint8_t *ip_address ) {
 void getMacAddress(byte *mac_address)
 { 
   Wire.beginTransmission(MCP7941x_EEPROM_I2C_ADDR);
-  Wire.send(MAC_LOCATION);
+  Wire.write(MAC_LOCATION);
   Wire.endTransmission();
 
   Wire.requestFrom(MCP7941x_EEPROM_I2C_ADDR, 6);
 
   for( int i=0; i<6; i++ )
   {
-    mac_address[i] = Wire.receive();
+    mac_address[i] = Wire.read();
   }
 }
 
@@ -127,22 +127,22 @@ void writeMacAddress(byte *mac_address)
   Serial.println("Unlocking MCP7941x");
 
   Wire.beginTransmission(MCP7941x_RTC_I2C_ADDR);
-  Wire.send(0x09);
-  Wire.send(0x55);
+  Wire.write(0x09);
+  Wire.write(0x55);
   Wire.endTransmission();
 
   Wire.beginTransmission(MCP7941x_RTC_I2C_ADDR);
-  Wire.send(0x09);
-  Wire.send(0xAA);
+  Wire.write(0x09);
+  Wire.write(0xAA);
   Wire.endTransmission();
 
   Serial.println("Writing MAC Address to MCP7941x"); 
   Wire.beginTransmission(MCP7941x_EEPROM_I2C_ADDR);
-  Wire.send(0xF2);
+  Wire.write(0xF2);
   
   for( int i=0; i<6; i++ )
   {
-    Wire.send(mac_address[i]);
+    Wire.write(mac_address[i]);
   }
   
   Wire.endTransmission();
